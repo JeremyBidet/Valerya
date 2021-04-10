@@ -1,0 +1,789 @@
+{
+	"stages": [
+		{
+			"id": "toss",
+			"order": 0,
+			"repeat": 1
+		},
+		{
+			"id": "collect",
+			"order": 1,
+			"repeat": 1
+		},
+		{
+			"id": "action",
+			"order": 2,
+			"repeat": 2
+		}
+	],
+	"citizens": [
+		{
+			"type": "CITIZEN",
+			"id": "clerk",
+			"role": "SAINT",
+			"ranks": [ 1 ],
+			"baseCost": 3,
+			"powerActive": "+3m",
+			"powerPassive": "+1m"
+		},
+		{
+			"type": "CITIZEN",
+			"id": "monk",
+			"role": "SAINT",
+			"ranks": [ 1 ],
+			"baseCost": 3,
+			"powerActive": "+1g+2m",
+			"powerPassive": "-1g+2m"
+		},
+		{
+			"type": "CITIZEN",
+			"id": "blacksmith",
+			"role": "CRAFTMAN",
+			"ranks": [ 2 ],
+			"baseCost": 3,
+			"powerActive": "+1g*(CITIZEN&SOLDIER)",
+			"powerPassive": "+1g"
+		},
+		{
+			"type": "CITIZEN",
+			"id": "merchant",
+			"role": "CRAFTMAN",
+			"ranks": [ 2 ],
+			"baseCost": 2,
+			"powerActive": "+2g|+2m",
+			"powerPassive": "+1g"
+		},
+		{
+			"type": "CITIZEN",
+			"id": "alchemist",
+			"role": "SHADOW",
+			"ranks": [ 3 ],
+			"baseCost": 3,
+			"powerActive": "-1g+3m",
+			"powerPassive": "-1m+2g"
+		},
+		{
+			"type": "CITIZEN",
+			"id": "mercenary",
+			"role": "SHADOW",
+			"ranks": [ 3 ],
+			"baseCost": 3,
+			"powerActive": "+1s+1g",
+			"powerPassive": "-1s+2g"
+		},
+		{
+			"type": "CITIZEN",
+			"id": "wizard",
+			"role": "SOLDIER",
+			"ranks": [ 4 ],
+			"baseCost": 4,
+			"powerActive": "+1m+1s",
+			"powerPassive": "+1m"
+		},
+		{
+			"type": "CITIZEN",
+			"id": "archer",
+			"role": "SOLDIER",
+			"ranks": [ 4 ],
+			"baseCost": 4,
+			"powerActive": "+2s",
+			"powerPassive": "+1s"
+		},
+		{
+			"type": "CITIZEN",
+			"id": "peasant",
+			"role": "NONE",
+			"ranks": [ 5 ],
+			"baseCost": 0,
+			"powerActive": "+1g",
+			"powerPassive": "+1g"
+		},
+		{
+			"type": "CITIZEN",
+			"id": "peasant",
+			"role": "CRAFTMAN",
+			"ranks": [ 5 ],
+			"baseCost": 2,
+			"powerActive": "+1g",
+			"powerPassive": "+1g"
+		},
+		{
+			"type": "CITIZEN",
+			"id": "knight",
+			"role": "NONE",
+			"ranks": [ 6 ],
+			"baseCost": 0,
+			"powerActive": "+1s",
+			"powerPassive": "+1s"
+		},
+		{
+			"type": "CITIZEN",
+			"id": "knight",
+			"role": "SOLDIER",
+			"ranks": [ 6 ],
+			"baseCost": 2,
+			"powerActive": "+1s",
+			"powerPassive": "+1s"
+		},
+		{
+			"type": "CITIZEN",
+			"id": "scoundrel",
+			"role": "SHADOW",
+			"ranks": [ 7 ],
+			"baseCost": 2,
+			"powerActive": "+2s+2g",
+			"powerPassive": "+1s+1g"
+		},
+		{
+			"type": "CITIZEN",
+			"id": "thief",
+			"role": "SHADOW",
+			"ranks": [ 7 ],
+			"baseCost": 2,
+			"powerActive": "(+3g|+3m)<-(1*player)",
+			"powerPassive": "+2g|+2m"
+		},
+		{
+			"type": "CITIZEN",
+			"id": "champion",
+			"role": "SOLDIER",
+			"ranks": [ 8 ],
+			"baseCost": 2,
+			"powerActive": "+4s",
+			"powerPassive": "-1g+4s"
+		},
+		{
+			"type": "CITIZEN",
+			"id": "warlord",
+			"role": "SOLDIER",
+			"ranks": [ 8 ],
+			"baseCost": 2,
+			"powerActive": "+1s*(CITIZEN&SOLDIER)",
+			"powerPassive": "+1s*(knight)"
+		},
+		{
+			"type": "CITIZEN",
+			"id": "priestess",
+			"role": "SAINT",
+			"ranks": [ 9, 10 ],
+			"baseCost": 2,
+			"powerActive": "+2s+1m",
+			"powerPassive": "-1m+3s"
+		},
+		{
+			"type": "CITIZEN",
+			"id": "paladin",
+			"role": "SAINT",
+			"ranks": [ 9, 10 ],
+			"baseCost": 2,
+			"powerActive": "+1s+2m",
+			"powerPassive": "-1s+3m"
+		},
+		{
+			"type": "CITIZEN",
+			"id": "miner",
+			"role": "CRAFTMAN",
+			"ranks": [ 11, 12 ],
+			"baseCost": 1,
+			"powerActive": "+1g+1g*DOMAIN",
+			"powerPassive": "+4g"
+		},
+		{
+			"type": "CITIZEN",
+			"id": "butcher",
+			"role": "CRAFTMAN",
+			"ranks": [ 11, 12 ],
+			"baseCost": 1,
+			"powerActive": "+2g*(CITIZEN&CRAFTMAN)",
+			"powerPassive": "+4g"
+		}
+	],
+	"domains": [
+		{
+			"type": "DOMAIN",
+			"id": "shadows_dock",
+			"cost": 10,
+			"roles": [ "SHADOW", "SHADOW" ],
+			"vp": 2,
+			"trigger": "NOW",
+			"power": "steal: 1 MONSTER from ANY_PLAYER"
+		},
+		{
+			"type": "DOMAIN",
+			"id": "lamentations_source",
+			"cost": 9,
+			"roles": [ "CRAFTMAN", "SHADOW" ],
+			"vp": 3,
+			"trigger": "recruit",
+			"power": "collect: 1 MANA"
+		},
+		{
+			"type": "DOMAIN",
+			"id": "craftmen_village",
+			"cost": 7,
+			"roles": [ "CRAFTMAN", "SHADOW" ],
+			"vp": 3,
+			"trigger": "NOW",
+			"power": "recruit: 1 CITIZEN&CRAFTMAN"
+		},
+		{
+			"type": "DOMAIN",
+			"id": "darks_harbor",
+			"cost": 6,
+			"roles": [ "SHADOW", "CRAFTMAN", "SOLDIER" ],
+			"vp": 2,
+			"trigger": "NOW",
+			"power": "recruit: 1 CITIZEN&SHADOW"
+		},
+		{
+			"type": "DOMAIN",
+			"id": "blackwidow_den",
+			"cost": 6,
+			"roles": [ "CRAFTMAN", "CRAFTMAN" ],
+			"vp": 3,
+			"trigger": "NOW",
+			"power": "trade: 1 CITIZEN for 3 VP"
+		},
+		{
+			"type": "DOMAIN",
+			"id": "graylake_dungeon",
+			"cost": 10,
+			"roles": [ "CRAFTMAN", "CRAFTMAN", "SHADOW" ],
+			"vp": 4,
+			"trigger": "NOW",
+			"power": "+1(CITIZEN)<=3g"
+		},
+		{
+			"type": "DOMAIN",
+			"id": "coupe_gorge",
+			"cost": 5,
+			"roles": [ "SHADOW", "SAINT" ],
+			"vp": 1,
+			"trigger": "NOW",
+			"power": "+3g<-(1*player)"
+		},
+		{
+			"type": "DOMAIN",
+			"id": "urdr_orb",
+			"cost": 6,
+			"roles": [ "SHADOW", "SAINT" ],
+			"vp": 1,
+			"trigger": "AFTER action",
+			"power": "+1m<-(1*player)"
+		},
+		{
+			"type": "DOMAIN",
+			"id": "asteraton_eye",
+			"cost": 8,
+			"roles": [ "SAINT", "SOLDIER" ],
+			"vp": 1,
+			"trigger": "NOW",
+			"power": "+5s+(1*action:hunt)"
+		},
+		{
+			"type": "DOMAIN",
+			"id": "dawn_citadel",
+			"cost": 11,
+			"roles": [ "CRAFTMAN", "SOLDIER", "SOLDIER" ],
+			"vp": 4,
+			"trigger": "AFTER toss",
+			"power": "1*DICE=DICE-1"
+		},
+		{
+			"type": "DOMAIN",
+			"id": "st_aquilin_cathedral",
+			"cost": 8,
+			"roles": [ "SAINT", "SAINT" ],
+			"vp": 3,
+			"trigger": "AFTER action",
+			"power": "+1g<-(1*player)"
+		},
+		{
+			"type": "DOMAIN",
+			"id": "lakeside_lookout",
+			"cost": 6,
+			"roles": [ "SOLDIER", "SOLDIER" ],
+			"vp": 3,
+			"trigger": "NOW",
+			"power": "-1(MONSTER)+3v"
+		},
+		{
+			"type": "DOMAIN",
+			"id": "scarlet_battalion",
+			"cost": 5,
+			"roles": [ "SOLDIER", "SOLDIER", "SOLDIER" ],
+			"vp": 2,
+			"trigger": "BEFORE action",
+			"power": "+1s"
+		},
+		{
+			"type": "DOMAIN",
+			"id": "purple_thorn",
+			"cost": 7,
+			"roles": [ "SOLDIER", "SAINT" ],
+			"vp": 3,
+			"trigger": "ANY action",
+			"power": "action:hunt->+1m"
+		},
+		{
+			"type": "DOMAIN",
+			"id": "peak_camp",
+			"cost": 8,
+			"roles": [ "SOLDIER", "SAINT" ],
+			"vp": 2,
+			"trigger": "NOW",
+			"power": "+3s & action:recruit:SOLDIER<=2g"
+		},
+		{
+			"type": "DOMAIN",
+			"id": "emerald_fortress",
+			"cost": 12,
+			"roles": [ "CRAFTMAN", "SOLDIER", "SAINT" ],
+			"vp": 5,
+			"trigger": "ANY action",
+			"power": "action:recruit:baseCost:static"
+		},
+		{
+			"type": "DOMAIN",
+			"id": "nae_golden_obelisk",
+			"cost": 6,
+			"roles": [ "CRAFTMAN", "SAINT" ],
+			"vp": 3,
+			"trigger": "NOW",
+			"power": "-3m+3v"
+		},
+		{
+			"type": "DOMAIN",
+			"id": "missous_hill",
+			"cost": 6,
+			"roles": [ "CRAFTMAN", "CRAFTMAN", "CRAFTMAN" ],
+			"vp": 2,
+			"trigger": "BEFORE action",
+			"power": "+1g"
+		},
+		{
+			"type": "DOMAIN",
+			"id": "ostendaar_monolith",
+			"cost": 9,
+			"roles": [ "CRAFTMAN", "SOLDIER" ],
+			"vp": 3,
+			"trigger": "BEFORE action",
+			"power": "+1m"
+		},
+		{
+			"type": "DOMAIN",
+			"id": "desert_orchid",
+			"cost": 9,
+			"roles": [ "SAINT", "SHADOW" ],
+			"vp": 3,
+			"trigger": "AFTER toss",
+			"power": "-1g*(CITIZEN&SAINT)->1*DICE=1"
+		},
+		{
+			"type": "DOMAIN",
+			"id": "fox_grove",
+			"cost": 9,
+			"roles": [ "SOLDIER", "SHADOW" ],
+			"vp": 3,
+			"trigger": "AFTER toss",
+			"power": "-2g->1*DICE=6"
+		},
+		{
+			"type": "DOMAIN",
+			"id": "broken_hand",
+			"cost": 7,
+			"roles": [ "SAINT", "CRAFTMAN" ],
+			"vp": 3,
+			"trigger": "NOW",
+			"power": "+1(CITIZEN&SAINT)"
+		},
+		{
+			"type": "DOMAIN",
+			"id": "pratchett_plateau",
+			"cost": 8,
+			"roles": [ "CRAFTMAN", "SAINT" ],
+			"vp": 3,
+			"trigger": "ANY action",
+			"power": "action:build:cost = action:build:cost - 1"
+		},
+		{
+			"type": "DOMAIN",
+			"id": "gargane_embrace",
+			"cost": 7,
+			"roles": [ "SOLDIER", "SOLDIER" ],
+			"vp": 2,
+			"trigger": "ANY toss",
+			"power": "DICE=DICE->+1v"
+		}
+	],
+	"monsters": [
+		{
+			"type": "MONSTER",
+			"id": "awful_bear",
+			"settlement": "MOUNTAIN",
+			"role": "BEAST",
+			"defenseStrength": 5,
+			"defenseMana": 0,
+			"vp": 3,
+			"reward": "+3g|+2m"
+		},
+		{
+			"type": "MONSTER",
+			"id": "orc_warrior",
+			"settlement": "MOUNTAIN",
+			"role": "MINION",
+			"defenseStrength": 9,
+			"defenseMana": 0,
+			"vp": 3,
+			"reward": "+1(CITIZEN<=3g)"
+		},
+		{
+			"type": "MONSTER",
+			"id": "chieftain",
+			"settlement": "MOUNTAIN",
+			"role": "BOSS",
+			"defenseStrength": 14,
+			"defenseMana": 0,
+			"vp": 6,
+			"reward": "+2g*(MOUNTAIN)"
+		},
+		{
+			"type": "MONSTER",
+			"id": "skeleton",
+			"settlement": "RUINS",
+			"role": "MINION",
+			"defenseStrength": 2,
+			"defenseMana": 0,
+			"vp": 2,
+			"reward": "+1g"
+		},
+		{
+			"type": "MONSTER",
+			"id": "incanddescent_skeleton",
+			"settlement": "RUINS",
+			"role": "TITAN",
+			"defenseStrength": 5,
+			"defenseMana": 0,
+			"vp": 3,
+			"reward": "+1g+1m"
+		},
+		{
+			"type": "MONSTER",
+			"id": "skeleton_king",
+			"settlement": "RUINS",
+			"role": "BOSS",
+			"defenseStrength": 8,
+			"defenseMana": 0,
+			"vp": 4,
+			"reward": "+2g*(RUINS)"
+		},
+		{
+			"type": "MONSTER",
+			"id": "kobolds",
+			"settlement": "CAVE",
+			"role": "MINION",
+			"defenseStrength": 5,
+			"defenseMana": 1,
+			"vp": 3,
+			"reward": "+2g+1m"
+		},
+		{
+			"type": "MONSTER",
+			"id": "gold_golem",
+			"settlement": "CAVE",
+			"role": "TITAN",
+			"defenseStrength": 7,
+			"defenseMana": 3,
+			"vp": 4,
+			"reward": "+5g"
+		},
+		{
+			"type": "MONSTER",
+			"id": "red_dragon",
+			"settlement": "CAVE",
+			"role": "BOSS",
+			"defenseStrength": 12,
+			"defenseMana": 6,
+			"vp": 7,
+			"reward": "+3g*(CAVE)"
+		},
+		{
+			"type": "MONSTER",
+			"id": "hibours",
+			"settlement": "VALLEY",
+			"role": "BEAST",
+			"defenseStrength": 4,
+			"defenseMana": 0,
+			"vp": 2,
+			"reward": "+2m"
+		},
+		{
+			"type": "MONSTER",
+			"id": "giant",
+			"settlement": "VALLEY",
+			"role": "TITAN",
+			"defenseStrength": 8,
+			"defenseMana": 0,
+			"vp": 3,
+			"reward": "+1g+2m"
+		},
+		{
+			"type": "MONSTER",
+			"id": "troll",
+			"settlement": "VALLEY",
+			"role": "BOSS",
+			"defenseStrength": 12,
+			"defenseMana": 0,
+			"vp": 6,
+			"reward": "+2m*(VALLEY)"
+		},
+		{
+			"type": "MONSTER",
+			"id": "gargoyle",
+			"settlement": "MOORS",
+			"role": "MINION",
+			"defenseStrength": 1,
+			"defenseMana": 0,
+			"vp": 1,
+			"reward": "+1s"
+		},
+		{
+			"type": "MONSTER",
+			"id": "wraith",
+			"settlement": "MOORS",
+			"role": "TITAN",
+			"defenseStrength": 4,
+			"defenseMana": 3,
+			"vp": 3,
+			"reward": "+1(CITIZEN<=2g)"
+		},
+		{
+			"type": "MONSTER",
+			"id": "witch_queen",
+			"settlement": "MOORS",
+			"role": "BOSS",
+			"defenseStrength": 5,
+			"defenseMana": 4,
+			"vp": 5,
+			"reward": "+1m*(MOORS)"
+		},
+		{
+			"type": "MONSTER",
+			"id": "gobelin",
+			"settlement": "HILLS",
+			"role": "MINION",
+			"defenseStrength": 1,
+			"defenseMana": 0,
+			"vp": 1,
+			"reward": "+1g"
+		},
+		{
+			"type": "MONSTER",
+			"id": "gobelin_mage",
+			"settlement": "HILLS",
+			"role": "TITAN",
+			"defenseStrength": 3,
+			"defenseMana": 0,
+			"vp": 2,
+			"reward": "+1g|+1m"
+		},
+		{
+			"type": "MONSTER",
+			"id": "gobelin_king",
+			"settlement": "HILLS",
+			"role": "BOSS",
+			"defenseStrength": 6,
+			"defenseMana": 0,
+			"vp": 4,
+			"reward": "+1g*(HILLS)"
+		},
+		{
+			"type": "MONSTER",
+			"id": "treant",
+			"settlement": "FOREST",
+			"role": "MINION",
+			"defenseStrength": 3,
+			"defenseMana": 0,
+			"vp": 1,
+			"reward": "+1g+1m"
+		},
+		{
+			"type": "MONSTER",
+			"id": "plague_spider",
+			"settlement": "FOREST",
+			"role": "BEAST",
+			"defenseStrength": 6,
+			"defenseMana": 0,
+			"vp": 2,
+			"reward": "+3g|+1(knight)"
+		},
+		{
+			"type": "MONSTER",
+			"id": "spider_queen",
+			"settlement": "FOREST",
+			"role": "BOSS",
+			"defenseStrength": 10,
+			"defenseMana": 3,
+			"vp": 5,
+			"reward": "+2g*(FOREST)|+1(CITIZEN)+1v"
+		},
+		{
+			"type": "MONSTER",
+			"id": "gelatinous_cube",
+			"settlement": "SWAMP",
+			"role": "MINION",
+			"defenseStrength": 4,
+			"defenseMana": 1,
+			"vp": 3,
+			"reward": "+2g"
+		},
+		{
+			"type": "MONSTER",
+			"id": "basilisk",
+			"settlement": "SWAMP",
+			"role": "BEAST",
+			"defenseStrength": 6,
+			"defenseMana": 3,
+			"vp": 4,
+			"reward": "+3g|+3m"
+		},
+		{
+			"type": "MONSTER",
+			"id": "swamp_dragon",
+			"settlement": "SWAMP",
+			"role": "BOSS",
+			"defenseStrength": 10,
+			"defenseMana": 4,
+			"vp": 6,
+			"reward": "+2m*(SWAMP)"
+		}
+	],
+	"dukes": [
+		{
+			"type": "DUKE",
+			"id": "waryn",
+			"desc": "waryn_desc",
+			"formula": "+1v*(CRAFTMAN)+2v*(SHADOW)+1v*g/3+1v*m/3+1v*s/3"
+		},
+		{
+			"type": "DUKE",
+			"id": "node",
+			"desc": "node_desc",
+			"formula": "+1v*(SOLDIER)+2v*(SHADOW)+1v*g/3+1v*m/3+1v*s/3"
+		},
+		{
+			"type": "DUKE",
+			"id": "lekzandr",
+			"desc": "lekzandr_desc",
+			"formula": "+1v*(CRAFTMAN)+2v*(SAINT)+1v*g/3+1v*m/3+1v*s/3"
+		},
+		{
+			"type": "DUKE",
+			"id": "isabella",
+			"desc": "isabella_desc",
+			"formula": "+1v*(SOLDIER)+2v*(SAINT)+1v*g/3+1v*m/3+1v*s/3"
+		},
+		{
+			"type": "DUKE",
+			"id": "elsyn",
+			"desc": "elsyn_desc",
+			"formula": "+2v*(SAINT)+2v*(SHADOW)+1v*g/4+1v*m/4+1v*s/4"
+		},
+		{
+			"type": "DUKE",
+			"id": "elysium",
+			"desc": "elysium_desc",
+			"formula": "+1v*(CRAFTMAN)+1v*(SOLDIER)+1v*(SHADOW)+1v*(SAINT)+1v*g/4+1v*m/4+1v*s/4"
+		},
+		{
+			"type": "DUKE",
+			"id": "hrothgar",
+			"desc": "hrothgar_desc",
+			"formula": "+2v*(MONSTER)+1v*(TITAN)+1v*g/4+1v*m/4+1v*s/4"
+		},
+		{
+			"type": "DUKE",
+			"id": "reese",
+			"desc": "reese_desc",
+			"formula": "+1v*(CITIZEN)+1v*(MONSTER)+1v*(DOMAIN)+1v*g/4+1v*m/4+1v*s/4"
+		},
+		{
+			"type": "DUKE",
+			"id": "cornelius",
+			"desc": "cornelius_desc",
+			"formula": "+3v*(DOMAIN)+1v*g/3+1v*m/3+1v*s/3"
+		},
+		{
+			"type": "DUKE",
+			"id": "simon",
+			"desc": "simon_desc",
+			"formula": "+1v*(CRAFTMAN)+1v*(SOLDIER)+1v*g/2+1v*m/2+1v*s/2"
+		}
+	],
+	"monsterSets": [
+		{
+			"settlement": "HILLS",
+			"items": [
+				{ "id": "gobelin", "quantity": 3 },
+				{ "id": "gobelin_mage", "quantity": 2 },
+				{ "id": "gobelin_king", "quantity": 1 }
+			]
+		},
+		{
+			"settlement": "MOORS",
+			"items": [
+				{ "id": "gargoyle", "quantity": 4 },
+				{ "id": "spectrum", "quantity": 1 },
+				{ "id": "witch_queen", "quantity": 1 }
+			]
+		},
+		{
+			"settlement": "RUINS",
+			"items": [
+				{ "id": "skeleton", "quantity": 3 },
+				{ "id": "incanddescent_skeleton", "quantity": 2 },
+				{ "id": "skeleton_king", "quantity": 1 }
+			]
+		},
+		{
+			"settlement": "FOREST",
+			"items": [
+				{ "id": "treant", "quantity": 3 },
+				{ "id": "plague_spider", "quantity": 2 },
+				{ "id": "spider_queen", "quantity": 1 }
+			]
+		},
+		{
+			"settlement": "VALLEY",
+			"items": [
+				{ "id": "hibours", "quantity": 3 },
+				{ "id": "giant", "quantity": 2 },
+				{ "id": "troll", "quantity": 1 }
+			]
+		},
+		{
+			"settlement": "MOUNTAIN",
+			"items": [
+				{ "id": "awful_bear", "quantity": 3 },
+				{ "id": "orc_warrior", "quantity": 2 },
+				{ "id": "chieftain", "quantity": 1 }
+			]
+		},
+		{
+			"settlement": "SWAMP",
+			"items": [
+				{ "id": "gelatinous_cube", "quantity": 4 },
+				{ "id": "basilisk", "quantity": 1 },
+				{ "id": "swamp_dragon", "quantity": 1 }
+			]
+		},
+		{
+			"settlement": "CAVE",
+			"items": [
+				{ "id": "kobolds", "quantity": 4 },
+				{ "id": "gold_golem", "quantity": 1 },
+				{ "id": "red_dragon", "quantity": 1 }
+			]
+		}
+	]
+}
