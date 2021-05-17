@@ -16,55 +16,54 @@ import java.util.stream.Collectors;
 
 public class DataParser extends ClassHelper<Integer> {
 
-	private static String fileName = "data.json";
-	private static String fileDir = "resources";
-	private static String filePath = fileDir + "/" + fileName;
-	
-	public static void init() throws IOException {
-		DataParser dataParser = DataParser.parseData();
+    private static String fileName = "data.json";
+    private static String fileDir = "resources";
+    private static String filePath = fileDir + "/" + fileName;
+    private final List<Stage> stages;
+    private final List<Citizen> citizens;
+    private final List<Domain> domains;
+    private final List<Monster> monsters;
+    private final List<Duke> dukes;
+    private final List<MonsterSet> monsterSets;
 
-		Citizen.citizens = dataParser.citizens.stream().collect(Collectors.toMap(Citizen::getId, Function.identity()));
-		Domain.domains = dataParser.domains.stream().collect(Collectors.toMap(Domain::getId, Function.identity()));
-		Monster.monsters = dataParser.monsters.stream().collect(Collectors.toMap(Monster::getId, Function.identity()));
-		Duke.dukes = dataParser.dukes.stream().collect(Collectors.toMap(Duke::getId, Function.identity()));
-		MonsterSet.monsterSets = dataParser.monsterSets.stream().collect(Collectors.toMap(MonsterSet::getId, Function.identity()));
-	}
+    @JsonCreator
+    private DataParser(@JsonProperty("stages") final List<Stage> stages,
+                       @JsonProperty("citizens") final List<Citizen> citizens,
+                       @JsonProperty("domains") final List<Domain> domains,
+                       @JsonProperty("monsters") final List<Monster> monsters,
+                       @JsonProperty("dukes") final List<Duke> dukes,
+                       @JsonProperty("sets") final List<MonsterSet> monsterSets) {
+        this.stages = stages;
+        this.citizens = citizens;
+        this.domains = domains;
+        this.monsters = monsters;
+        this.dukes = dukes;
+        this.monsterSets = monsterSets;
+    }
 
-	private static DataParser parseData() throws IOException {
-		File file = new File(filePath);
+    public static void init() throws IOException {
+        DataParser dataParser = DataParser.parseData();
 
-		JsonFactory jsonFactory = new JsonFactory();
+        Citizen.citizens = dataParser.citizens.stream().collect(Collectors.toMap(Citizen::getId, Function.identity()));
+        Domain.domains = dataParser.domains.stream().collect(Collectors.toMap(Domain::getId, Function.identity()));
+        Monster.monsters = dataParser.monsters.stream().collect(Collectors.toMap(Monster::getId, Function.identity()));
+        Duke.dukes = dataParser.dukes.stream().collect(Collectors.toMap(Duke::getId, Function.identity()));
+        MonsterSet.monsterSets = dataParser.monsterSets.stream().collect(Collectors.toMap(MonsterSet::getId, Function.identity()));
+    }
 
-		ObjectMapper objectMapper = new ObjectMapper(jsonFactory);
+    private static DataParser parseData() throws IOException {
+        File file = new File(filePath);
 
-		return objectMapper.readerFor(DataParser.class).readValue(file);
-	}
+        JsonFactory jsonFactory = new JsonFactory();
 
-	private final List<Stage> stages;
-	private final List<Citizen> citizens;
-	private final List<Domain> domains;
-	private final List<Monster> monsters;
-	private final List<Duke> dukes;
-	private final List<MonsterSet> monsterSets;
+        ObjectMapper objectMapper = new ObjectMapper(jsonFactory);
 
-	@JsonCreator
-	private DataParser(@JsonProperty("stages") final List<Stage> stages,
-	                   @JsonProperty("citizens") final List<Citizen> citizens,
-	                   @JsonProperty("domains") final List<Domain> domains,
-	                   @JsonProperty("monsters") final List<Monster> monsters,
-	                   @JsonProperty("dukes") final List<Duke> dukes,
-	                   @JsonProperty("sets") final List<MonsterSet> monsterSets) {
-		this.stages = stages;
-		this.citizens = citizens;
-		this.domains = domains;
-		this.monsters = monsters;
-		this.dukes = dukes;
-		this.monsterSets = monsterSets;
-	}
-	
-	@Override
-	public Integer getId() {
-		return this.hashCode();
-	}
-	
+        return objectMapper.readerFor(DataParser.class).readValue(file);
+    }
+
+    @Override
+    public Integer getId() {
+        return this.hashCode();
+    }
+
 }

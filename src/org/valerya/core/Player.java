@@ -9,65 +9,68 @@ import java.util.Map;
 
 public class Player {
 
-	public static final Map<String, Player> players = new HashMap<>();
+    public static final Map<String, Player> players = new HashMap<>();
 
-	public final String name;
+    public final String name;
+    public final Duke duke;
+    public final List<Citizen> citizens;
+    public final List<Monster> monsters;
+    public final List<Domain> domains;
+    private final Map<Integer, Integer> resources;
 
-	private final Map<Integer, Integer> resources;
+    public Player(final String name, final Duke duke) {
+        this.name = name;
 
-	public final Duke duke;
+        this.resources = new HashMap<Integer, Integer>() {{
+            put(Resource.GOLD, 2);
+            put(Resource.MANA, 1);
+            put(Resource.STRENGTH, 0);
+            put(Resource.VP, 0);
+        }};
 
-	public final List<Citizen> citizens;
-	public final List<Monster> monsters;
-	public final List<Domain> domains;
+        this.duke = duke;
 
-	public Player(final String name, final Duke duke) {
-		this.name = name;
+        this.citizens = new ArrayList<Citizen>() {{
+            add(Citizen.citizens.get("starting_peasant"));
+            add(Citizen.citizens.get("starting_knight"));
+        }};
+        this.monsters = new ArrayList<>();
+        this.domains = new ArrayList<>();
+    }
 
-		this.resources = new HashMap<Integer, Integer>() {{
-			put(Resource.GOLD, 2);
-			put(Resource.MANA, 1);
-			put(Resource.STRENGTH, 0);
-			put(Resource.VP, 0);
-		}};
+    /**
+     * Return the remaining amount of the given resource.
+     *
+     * @param resource the resource to evaluate
+     * @return the amount
+     */
+    public int get(final int resource) {
+        return this.resources.getOrDefault(resource, -1);
+    }
 
-		this.duke = duke;
+    public void add(final int resource, final int quantity) {
+        this.resources.merge(resource, quantity, (i1, i2) -> Math.max(0, Integer.sum(i1, i2)));
+    }
 
-		this.citizens = new ArrayList<Citizen>() {{
-			add(Citizen.citizens.get("starting_peasant"));
-			add(Citizen.citizens.get("starting_knight"));
-		}};
-		this.monsters = new ArrayList<>();
-		this.domains = new ArrayList<>();
-	}
+    public int gold() {
+        return this.resources.get(Resource.GOLD);
+    }
 
-	public int get(final int resource) {
-		return this.resources.getOrDefault(resource, -1);
-	}
+    public int mana() {
+        return this.resources.get(Resource.MANA);
+    }
 
-	public void add(final int resource, final int quantity) {
-		this.resources.merge(resource, quantity, (i1, i2) -> Math.max(0, Integer.sum(i1,i2)));
-	}
+    public int strength() {
+        return this.resources.get(Resource.STRENGTH);
+    }
 
-	public int gold() {
-		return this.resources.get(Resource.GOLD);
-	}
+    public int vp() {
+        return this.resources.get(Resource.VP);
+    }
 
-	public int mana() {
-		return this.resources.get(Resource.MANA);
-	}
-
-	public int strength() {
-		return this.resources.get(Resource.STRENGTH);
-	}
-
-	public int vp() {
-		return this.resources.get(Resource.VP);
-	}
-
-	public void hunt(Monster monster) {
-		this.monsters.add(monster);
-		MonsterSet.monsterSets.remove(monster);
-	}
+    public void hunt(Monster monster) {
+        this.monsters.add(monster);
+        MonsterSet.monsterSets.remove(monster);
+    }
 
 }

@@ -2,28 +2,55 @@ package org.valerya.core;
 
 public class Trigger {
 
-	public enum Hook {
-		BEFORE,
-		AFTER,
-		ANY,
-		;
-	}
+    public final Hook hook;
+    public final Event event;
 
-	public enum Event {
-		TOSS,
-		HARVEST,
-		RECRUIT,
-		HUNT,
-		BUILD,
-		;
-	}
+    public Trigger(final Hook hook, final Event event) {
+        this.hook = hook;
+        this.event = event;
+    }
 
-	public final Hook hook;
-	public final Event event;
+    public enum Hook {
+        NOW,
+        BEFORE,
+        AFTER,
+        ANY,
+        ;
 
-	public Trigger(final Hook hook, final Event event) {
-		this.hook = hook;
-		this.event = event;
-	}
+        /**
+         * Return a string representing all fields of this class, separated with the <code>sep</code> param.
+         *
+         * @param sep the separator
+         * @return the string representation
+         */
+        public static String toString(final String sep) {
+            return "NOW" + sep + "BEFORE" + sep + "AFTER" + sep + "ANY";
+        }
+    }
+
+    public enum Event {
+        TOSS,
+        HARVEST,
+        ACTION,
+
+        RECRUIT,
+        HUNT,
+        BUILD,
+
+        NONE,
+        ;
+
+        /**
+         * Return a string representing all fields of this class, separated with the <code>sep</code> param.
+         *
+         * @param sep the separator
+         * @return the string representation
+         */
+        public static String toString(final String sep) {
+            return "TOSS" + sep + "HARVEST" + sep + "ACTION"
+                    + sep + "RECRUIT" + sep + "HUNT" + sep + "BUILD"
+                    + sep + "NONE";
+        }
+    }
 
 }
