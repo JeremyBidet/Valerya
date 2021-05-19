@@ -36,9 +36,9 @@ public class Item {
     
     /**
      *
-     * @param quantity
-     * @param resource
-     * @return
+     * @param quantity the {@link Resource} quantity
+     * @param resource the {@link Resource} type (as integer value)
+     * @return the newly created item
      */
     public static Item create(final int quantity, final int resource) {
         return new Item(quantity, resource);

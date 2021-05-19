@@ -123,14 +123,27 @@ public class Moves {
      */
     public static final BiConsumer<Player, Integer> stealRandomDomains = (player, quantity) -> Moves.<Domain>stealRandomCards(player, quantity, Type.DOMAIN);
     
-    private static <T> void stealRandomCards(Player player, int quantity, Type type) {
-        final Function<Player, List<T>> getter;
+    /**
+     * Generic stealRandomCards method.<br>
+     * According to the parameterized type of the card ({@link Domain}, {@link Monster} or {@link Citizen}),
+     * this method will prompt the user to choose at least one player to steal from, the given quantity of cards.<br>
+     * <br>
+     * The {@linkplain Type type} param must match with the <code>&lt;CARD&gt;</code> type.<br>
+     * Example: for &lt;{@link Domain}&gt; parameterized type, we must use the {@link Type#DOMAIN} card type.<br>
+     * <br>
+     * @param player the player who steal
+     * @param quantity the cards quantity to steal
+     * @param type the card type to steal
+     * @param <CARD> type of the card
+     */
+    private static <CARD> void stealRandomCards(Player player, int quantity, Type type) {
+        final Function<Player, List<CARD>> getter;
         if (type == Type.CITIZEN) {
-            getter = p -> (List<T>) p.citizens;
+            getter = p -> (List<CARD>) p.citizens;
         } else if(type == Type.MONSTER) {
-            getter = p -> (List<T>) p.monsters;
+            getter = p -> (List<CARD>) p.monsters;
         } else if(type == Type.DOMAIN) {
-            getter = p -> (List<T>) p.domains;
+            getter = p -> (List<CARD>) p.domains;
         } else {
             return;
         }
@@ -175,7 +188,7 @@ public class Moves {
         choices.entrySet().stream().forEach(e -> {
             final Player target = Player.players.get(e.getKey());
             IntStream.range(0, e.getValue()).forEach(i -> {
-                final T card = getter.apply(target).get(new Random().nextInt(getter.apply(target).size()));
+                final CARD card = getter.apply(target).get(new Random().nextInt(getter.apply(target).size()));
                 getter.apply(target).remove(card);
                 getter.apply(player).add(card);
             });
