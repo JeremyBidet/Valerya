@@ -1,41 +1,64 @@
 package org.valerya.main;
 
-import org.valerya.core.Resource;
-import org.valerya.data.*;
-import org.valerya.utils.parser.DataParser;
+import org.valerya.data.Citizen;
+import org.valerya.data.Domain;
+import org.valerya.utils.ObjectHelper;
 
-import java.io.IOException;
 import java.util.Arrays;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.function.Function;
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
 public class Main {
 
     public static void main(String[] args) {
-
-        try {
-
-            DataParser.init();
-            System.out.println(Citizen.citizens);
-            System.out.println(Domain.domains);
-            System.out.println(Monster.monsters);
-            System.out.println(Duke.dukes);
-            System.out.println(MonsterSet.monsterSets);
-
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
-        int r1 = Resource.CITIZEN;
-        int r2 = Resource.SOLDIER;
-
-        System.out.println(r1);
-        System.out.println(r2);
-        System.out.println(Resource.CITIZEN | Resource.SOLDIER);
-        System.out.println(r1 | r2);
-        System.out.println(r1 & r2);
-        System.out.println(Arrays.toString(Resource.names(144)));
-        System.out.println(Arrays.toString(Resource.names(Resource.CITIZEN | Resource.SOLDIER)));
-        System.out.println(Resource.value("CITIZEN", "SOLDIER"));
-
+    
+        /**************************************************************************/
+        
+        final int dice1Faces = 6;
+        final int dice2Faces = 6;
+        
+        final Map<Integer, Integer> tossesProbability = new HashMap<>(dice1Faces + dice2Faces);
+        
+        IntStream.range(1, dice1Faces+1)
+                .forEach(i -> IntStream.range(1, dice2Faces+1)
+                        .forEach(j -> {
+                            tossesProbability.merge(i, 1, Integer::sum);
+                            tossesProbability.merge(j, 1, Integer::sum);
+                            tossesProbability.merge(i+j, 1, Integer::sum);
+                        }));
+    
+        System.out.println(tossesProbability);
+    
+        final Map<Integer, Integer> tossesProbability100 = IntStream.range(1, tossesProbability.size()+1)
+                .boxed()
+                .collect(Collectors.toMap(Function.identity(), i -> 100 * tossesProbability.get(i) / (dice1Faces*dice2Faces)));
+    
+        System.out.println(tossesProbability100);
+        
+        /**************************************************************************/
+        
+        Object[] objects = new Object[] {};
+        System.out.println(ObjectHelper.equals(objects) + ": " + Arrays.toString(objects));
+    
+        objects = new Object[] {1, true, null, "ok"};
+        System.out.println(ObjectHelper.equals(objects) + ": " + Arrays.toString(objects));
+    
+        objects = new Object[] {1, 1, 1};
+        System.out.println(ObjectHelper.equals(objects) + ": " + Arrays.toString(objects));
+    
+        objects = new Object[] {1, false, 2};
+        System.out.println(ObjectHelper.equals(objects) + ": " + Arrays.toString(objects));
+        
+        objects = new Object[] {Citizen.class, null, Citizen.class};
+        System.out.println(ObjectHelper.equals(objects) + ": " + Arrays.toString(objects));
+    
+        objects = new Object[] {Domain.class, Domain.class, Domain.class};
+        System.out.println(ObjectHelper.equals(objects) + ": " + Arrays.toString(objects));
+    
+        /**************************************************************************/
     }
 
 }

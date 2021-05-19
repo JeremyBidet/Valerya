@@ -1,9 +1,6 @@
 package org.valerya.core;
 
-import org.valerya.data.Citizen;
-import org.valerya.data.Domain;
-import org.valerya.data.Monster;
-import org.valerya.data.Type;
+import org.valerya.data.*;
 import org.valerya.utils.StringHelper;
 import org.valerya.utils.TriConsumer;
 
@@ -13,8 +10,8 @@ import java.util.function.BiFunction;
 import java.util.function.Function;
 import java.util.stream.IntStream;
 
-public class Moves {
-
+public class PowerHelper {
+    
     /**
      * Perform a prompted <code>or</code> between two items.<br>
      * The user has to choose one of them.<br>
@@ -23,9 +20,9 @@ public class Moves {
      * <b><code>item2</code></b> the second item<br>
      * <b><code>return</code></b> the selected item
      */
-    public static final BiFunction<Item, Item, Item> or = (item1, item2) -> {
+    public static final BiFunction<Resource, Resource, Resource> or = (resource1, resource2) -> {
         int choice = 0;
-        System.out.println("Which one ?\n\t1. " + item1 + "\n\t2. " + item2);
+        System.out.println("Which one ?\n\t1. " + resource1 + "\n\t2. " + resource2);
 
         Scanner sc = new Scanner(System.in);
         while (choice != 1 && choice != 2) {
@@ -34,7 +31,7 @@ public class Moves {
         }
         sc.close();
 
-        return choice == 1 ? item1 : item2;
+        return choice == 1 ? resource1 : resource2;
     };
 
     /**
@@ -43,8 +40,18 @@ public class Moves {
      * <b><code>player</code></b> the player to feed<br>
      * <b><code>item</code></b> the resource item<br>
      */
-    public static final BiConsumer<Player, Item> collect = (player, item) -> {
-        player.add(item.resource, item.quantity);
+    public static final BiConsumer<Player, Resource> collect = (player, resource) -> {
+        player.add(resource.resource, resource.quantity);
+    };
+    
+    /**
+     * Spend resource for a player.<br>
+     * <br>
+     * <b><code>player</code></b> the player to feed<br>
+     * <b><code>item</code></b> the resource item<br>
+     */
+    public static final BiConsumer<Player, Resource> spend = (player, resource) -> {
+        player.add(resource.resource, -resource.quantity);
     };
 
     /**
@@ -56,9 +63,9 @@ public class Moves {
      * <b><code>item2</code></b> the second item<br>
      * <b><code>return</code></b> the selected item
      */
-    public static final TriConsumer<Player, Item, Item> trade = (player, item1, item2) -> {
+    public static final TriConsumer<Player, Resource, Resource> trade = (player, resource1, resource2) -> {
         String choice = "";
-        System.out.println("Trade " + item1 + " for " + item2 + " ?");
+        System.out.println("Trade " + resource1 + " for " + resource2 + " ?");
 
         Scanner sc = new Scanner(System.in);
         while (!choice.equalsIgnoreCase("y") && !choice.equalsIgnoreCase("yes") && !choice.equalsIgnoreCase("n") && !choice.equalsIgnoreCase("no")) {
@@ -67,8 +74,8 @@ public class Moves {
         }
         sc.close();
 
-        collect.accept(player, item1);
-        collect.accept(player, item2);
+        spend.accept(player, resource1);
+        collect.accept(player, resource2);
     };
 
     /**
@@ -77,11 +84,11 @@ public class Moves {
      * <b><code>player</code></b> the player to feed<br>
      * <b><code>item</code></b> the resource item and its source<br>
      */
-    public static final BiConsumer<Player, Item> steal = (player, item) -> {
+    public static final BiConsumer<Player, Resource> steal = (player, resource) -> {
         String choice = "";
-        System.out.println("Steal " + item + " from ?");
+        System.out.println("Steal " + resource + " from ? (The stolen amount cannot overtake the target stock)");
         String players = Player.players.values().stream()
-                .map(p -> "\t- " + p.name + " (" + p.get(item.resource) + ")")
+                .map(p -> "\t- " + p.name + " (" + p.get(resource.resource) + ")")
                 .reduce(StringHelper::joinLN)
                 .orElse("");
         System.out.println(players);
@@ -94,9 +101,9 @@ public class Moves {
         sc.close();
 
         final Player target = Player.players.get(choice);
-        final int quantity = Math.min(target.get(item.resource), item.quantity);
-        target.add(item.resource, -quantity);
-        player.add(item.resource, quantity);
+        resource.quantity = Math.min(target.get(resource.resource), resource.quantity);
+        spend.accept(target, resource);
+        collect.accept(player, resource);
     };
     
     /**
@@ -105,7 +112,7 @@ public class Moves {
      * <b><code>player</code></b> the player to feed<br>
      * <b><code>quantity</code></b> the number of domains to steal<br>
      */
-    public static final BiConsumer<Player, Integer> stealRandomCitizens = (player, quantity) -> Moves.<Citizen>stealRandomCards(player, quantity, Type.CITIZEN);
+    public static final BiConsumer<Player, Integer> stealRandomCitizens = (player, quantity) -> PowerHelper.<Citizen>stealRandomCards(player, quantity, Type.CITIZEN);
     
     /**
      * Steal randomly a given amount of domains from player(s).<br>
@@ -113,7 +120,7 @@ public class Moves {
      * <b><code>player</code></b> the player to feed<br>
      * <b><code>quantity</code></b> the number of domains to steal<br>
      */
-    public static final BiConsumer<Player, Integer> stealRandomMonsters = (player, quantity) -> Moves.<Monster>stealRandomCards(player, quantity, Type.MONSTER);
+    public static final BiConsumer<Player, Integer> stealRandomMonsters = (player, quantity) -> PowerHelper.<Monster>stealRandomCards(player, quantity, Type.MONSTER);
     
     /**
      * Steal randomly a given amount of domains from player(s).<br>
@@ -121,7 +128,7 @@ public class Moves {
      * <b><code>player</code></b> the player to feed<br>
      * <b><code>quantity</code></b> the number of domains to steal<br>
      */
-    public static final BiConsumer<Player, Integer> stealRandomDomains = (player, quantity) -> Moves.<Domain>stealRandomCards(player, quantity, Type.DOMAIN);
+    public static final BiConsumer<Player, Integer> stealRandomDomains = (player, quantity) -> PowerHelper.<Domain>stealRandomCards(player, quantity, Type.DOMAIN);
     
     /**
      * Generic stealRandomCards method.<br>
@@ -194,5 +201,62 @@ public class Moves {
             });
         });
     }
+    
+    /**
+     * Prompt the player to recruit a citizen of the given {@linkplain Role role} among the available citizens.<br>
+     * <br>
+     * <b><code>player</code></b> the recruiting player<br>
+     * <b><code>role</code></b> the role of the citizenl<br>
+     */
+    public static final BiConsumer<Player, Role> recruit = (player, role) -> {
+        String choice = "";
+        System.out.println("Choose the " + role + " to recruit ?");
+        String players = Game.citizens.entrySet().stream()
+                .filter(e -> e.getKey().role == role && e.getValue() > 0)
+                .map(e -> "\t- " + e.getValue() + " " + e.getKey().id)
+                .reduce(StringHelper::joinLN)
+                .orElse("");
+        System.out.println(players);
+    
+        Scanner sc = new Scanner(System.in);
+        while (!Citizen.citizens.containsKey(choice)) {
+            System.out.print(": ");
+            choice = sc.next();
+        }
+        sc.close();
+        
+        final Citizen citizen = Citizen.citizens.get(choice);
+        Game.citizens.compute(citizen, (c, v) -> v - 1);
+        player.citizens.add(citizen);
+    };
+    
+    /**
+     * Prompt the player to change a dice for a given amount of resource.<br>
+     * <br>
+     * <b><code>resource</code></b> the resource to spend<br>
+     * <b><code>value</code></b> the new dice value<br>
+     */
+    public static final BiConsumer<Resource, Integer> changeDice = (resource, value) -> {
+        int choice = -1;
+        System.out.println("Spend " + resource + " to change a dice to a " + value + " ? Select the dice:");
+        System.out.println("\t0. Do not change");
+        System.out.println("\t1. " + Turn.current.firstMove.toss.dice1.value());
+        System.out.println("\t2. " + Turn.current.firstMove.toss.dice2.value());
+        
+        Scanner sc = new Scanner(System.in);
+        while (choice < 0 || choice > 2) {
+            System.out.print(": ");
+            choice = sc.nextInt();
+        }
+        sc.close();
+        
+        if(choice == 0) {
+            return;
+        }
+        
+        final Toss.Dice dice = choice == 1 ? Turn.current.firstMove.toss.dice1 : Turn.current.firstMove.toss.dice2;
+        dice.change(value);
+        spend.accept(Turn.current.firstMove.player, resource);
+    };
     
 }

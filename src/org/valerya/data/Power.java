@@ -1,6 +1,7 @@
 package org.valerya.data;
 
 import org.valerya.core.*;
+import org.valerya.utils.ListHelper;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -17,129 +18,205 @@ public class Power {
     /* Define CITIZEN powers */
     static {
         powers.put("clerk", Power.createForCitizen("clerk", true,
-                (player) -> Moves.collect.accept(player, Item.create(3, Resource.MANA)),
-                (player) -> Moves.collect.accept(player, Item.create(1, Resource.MANA))));
+                (player) -> PowerHelper.collect.accept(player, Resource.create(3, Resource.MANA)),
+                (player) -> PowerHelper.collect.accept(player, Resource.create(1, Resource.MANA))));
         powers.put("monk", Power.createForCitizen("monk", true,
                 (player) -> {
-                    Moves.collect.accept(player, Item.create(1, Resource.GOLD));
-                    Moves.collect.accept(player, Item.create(2, Resource.MANA));
+                    PowerHelper.collect.accept(player, Resource.create(1, Resource.GOLD));
+                    PowerHelper.collect.accept(player, Resource.create(2, Resource.MANA));
                 },
                 (player) -> {
-                    Moves.collect.accept(player, Item.create(1, Resource.MANA));
-                    Moves.collect.accept(player, Item.create(2, Resource.GOLD));
+                    PowerHelper.collect.accept(player, Resource.create(1, Resource.MANA));
+                    PowerHelper.collect.accept(player, Resource.create(2, Resource.GOLD));
                 }));
         powers.put("blacksmith", Power.createForCitizen("blacksmith", true,
                 (player) -> {
-                    final int qty = (int) player.citizens.stream().filter(c -> Objects.equals(c.role, Role.SOLDIER)).count();
-                    Moves.collect.accept(player, Item.create(qty, Resource.GOLD));
+                    final int qty = ListHelper.<Citizen>count(player.citizens, c -> c.role == Role.SOLDIER);
+                    PowerHelper.collect.accept(player, Resource.create(qty, Resource.GOLD));
                 },
-                (player) -> Moves.collect.accept(player, Item.create(1, Resource.GOLD))));
+                (player) -> PowerHelper.collect.accept(player, Resource.create(1, Resource.GOLD))));
         powers.put("merchant", Power.createForCitizen("merchant", true,
                 (player) -> {
-                    Item item = Moves.or.apply(Item.create(2, Resource.GOLD), Item.create(2, Resource.MANA));
-                    Moves.collect.accept(player, item);
+                    Resource resource = PowerHelper.or.apply(Resource.create(2, Resource.GOLD), Resource.create(2, Resource.MANA));
+                    PowerHelper.collect.accept(player, resource);
                 },
-                (player) -> Moves.collect.accept(player, Item.create(1, Resource.GOLD))));
+                (player) -> PowerHelper.collect.accept(player, Resource.create(1, Resource.GOLD))));
         powers.put("alchemist", Power.createForCitizen("alchemist", true,
-                (player) -> Moves.trade.accept(player, Item.create(1, Resource.GOLD), Item.create(3, Resource.MANA)),
+                (player) -> PowerHelper.trade.accept(player, Resource.create(1, Resource.GOLD), Resource.create(3, Resource.MANA)),
                 (player) -> {
-                    Moves.collect.accept(player, Item.create(1, Resource.MANA));
-                    Moves.collect.accept(player, Item.create(2, Resource.GOLD));
+                    PowerHelper.collect.accept(player, Resource.create(1, Resource.MANA));
+                    PowerHelper.collect.accept(player, Resource.create(2, Resource.GOLD));
                 }));
         powers.put("mercenary", Power.createForCitizen("mercenary", true,
                 (player) -> {
-                    Moves.collect.accept(player, Item.create(1, Resource.STRENGTH));
-                    Moves.collect.accept(player, Item.create(1, Resource.GOLD));
+                    PowerHelper.collect.accept(player, Resource.create(1, Resource.STRENGTH));
+                    PowerHelper.collect.accept(player, Resource.create(1, Resource.GOLD));
                 },
-                (player) -> Moves.trade.accept(player, Item.create(1, Resource.STRENGTH), Item.create(2, Resource.GOLD))));
+                (player) -> PowerHelper.trade.accept(player, Resource.create(1, Resource.STRENGTH), Resource.create(2, Resource.GOLD))));
         powers.put("wizard", Power.createForCitizen("wizard", true,
                 (player) -> {
-                    Moves.collect.accept(player, Item.create(1, Resource.MANA));
-                    Moves.collect.accept(player, Item.create(1, Resource.STRENGTH));
+                    PowerHelper.collect.accept(player, Resource.create(1, Resource.MANA));
+                    PowerHelper.collect.accept(player, Resource.create(1, Resource.STRENGTH));
                 },
-                (player) -> Moves.collect.accept(player, Item.create(1, Resource.MANA))));
+                (player) -> PowerHelper.collect.accept(player, Resource.create(1, Resource.MANA))));
         powers.put("archer", Power.createForCitizen("archer", true,
-                (player) -> Moves.collect.accept(player, Item.create(2, Resource.STRENGTH)),
-                (player) -> Moves.collect.accept(player, Item.create(1, Resource.STRENGTH))));
+                (player) -> PowerHelper.collect.accept(player, Resource.create(2, Resource.STRENGTH)),
+                (player) -> PowerHelper.collect.accept(player, Resource.create(1, Resource.STRENGTH))));
         powers.put("peasant", Power.createForCitizen("peasant", true,
-                (player) -> Moves.collect.accept(player, Item.create(1, Resource.GOLD)),
-                (player) -> Moves.collect.accept(player, Item.create(1, Resource.GOLD))));
+                (player) -> PowerHelper.collect.accept(player, Resource.create(1, Resource.GOLD)),
+                (player) -> PowerHelper.collect.accept(player, Resource.create(1, Resource.GOLD))));
         powers.put("knight", Power.createForCitizen("knight", true,
-                (player) -> Moves.collect.accept(player, Item.create(1, Resource.STRENGTH)),
-                (player) -> Moves.collect.accept(player, Item.create(1, Resource.STRENGTH))));
+                (player) -> PowerHelper.collect.accept(player, Resource.create(1, Resource.STRENGTH)),
+                (player) -> PowerHelper.collect.accept(player, Resource.create(1, Resource.STRENGTH))));
         powers.put("scoundrel", Power.createForCitizen("scoundrel", true,
                 (player) -> {
-                    Moves.collect.accept(player, Item.create(2, Resource.STRENGTH));
-                    Moves.collect.accept(player, Item.create(2, Resource.GOLD));
+                    PowerHelper.collect.accept(player, Resource.create(2, Resource.STRENGTH));
+                    PowerHelper.collect.accept(player, Resource.create(2, Resource.GOLD));
                 },
                 (player) -> {
-                    Moves.collect.accept(player, Item.create(1, Resource.STRENGTH));
-                    Moves.collect.accept(player, Item.create(1, Resource.GOLD));
+                    PowerHelper.collect.accept(player, Resource.create(1, Resource.STRENGTH));
+                    PowerHelper.collect.accept(player, Resource.create(1, Resource.GOLD));
                 }));
         powers.put("thief", Power.createForCitizen("thief", true,
                 (player) -> {
-                    Item item = Moves.or.apply(Item.create(3, Resource.GOLD), Item.create(3, Resource.MANA));
-                    Moves.steal.accept(player, item);
+                    Resource resource = PowerHelper.or.apply(Resource.create(3, Resource.GOLD), Resource.create(3, Resource.MANA));
+                    PowerHelper.steal.accept(player, resource);
                 },
                 (player) -> {
-                    Moves.collect.accept(player, Item.create(2, Resource.GOLD));
-                    Moves.collect.accept(player, Item.create(2, Resource.MANA));
+                    PowerHelper.collect.accept(player, Resource.create(2, Resource.GOLD));
+                    PowerHelper.collect.accept(player, Resource.create(2, Resource.MANA));
                 }));
         powers.put("champion", Power.createForCitizen("champion", true,
-                (player) -> Moves.collect.accept(player, Item.create(4, Resource.STRENGTH)),
-                (player) -> Moves.trade.accept(player, Item.create(1, Resource.GOLD), Item.create(4, Resource.STRENGTH))));
+                (player) -> PowerHelper.collect.accept(player, Resource.create(4, Resource.STRENGTH)),
+                (player) -> PowerHelper.trade.accept(player, Resource.create(1, Resource.GOLD), Resource.create(4, Resource.STRENGTH))));
         powers.put("warlord", Power.createForCitizen("warlord", true,
                 (player) -> {
-                    final int qty = (int) player.citizens.stream().filter(c -> Objects.equals(c.role, Role.SOLDIER)).count();
-                    Moves.collect.accept(player, Item.create(qty, Resource.STRENGTH));
+                    final int qty = ListHelper.<Citizen>count(player.citizens, c -> c.role == Role.SOLDIER);
+                    PowerHelper.collect.accept(player, Resource.create(qty, Resource.STRENGTH));
                 },
                 (player) -> {
-                    final int qty = (int) player.citizens.stream().filter(c -> Objects.equals(c.id, "knight")).count();
-                    Moves.collect.accept(player, Item.create(qty, Resource.STRENGTH));
+                    final int qty = ListHelper.<Citizen>count(player.citizens, c -> "knight".equals(c.id));
+                    PowerHelper.collect.accept(player, Resource.create(qty, Resource.STRENGTH));
                 }));
         powers.put("priestess", Power.createForCitizen("priestess", true,
                 (player) -> {
-                    Moves.collect.accept(player, Item.create(2, Resource.STRENGTH));
-                    Moves.collect.accept(player, Item.create(1, Resource.MANA));
+                    PowerHelper.collect.accept(player, Resource.create(2, Resource.STRENGTH));
+                    PowerHelper.collect.accept(player, Resource.create(1, Resource.MANA));
                 },
-                (player) -> Moves.trade.accept(player, Item.create(1, Resource.MANA), Item.create(3, Resource.STRENGTH))));
+                (player) -> PowerHelper.trade.accept(player, Resource.create(1, Resource.MANA), Resource.create(3, Resource.STRENGTH))));
         powers.put("paladin", Power.createForCitizen("paladin", true,
                 (player) -> {
-                    Moves.collect.accept(player, Item.create(1, Resource.STRENGTH));
-                    Moves.collect.accept(player, Item.create(2, Resource.MANA));
+                    PowerHelper.collect.accept(player, Resource.create(1, Resource.STRENGTH));
+                    PowerHelper.collect.accept(player, Resource.create(2, Resource.MANA));
                 },
-                (player) -> Moves.trade.accept(player, Item.create(1, Resource.STRENGTH), Item.create(3, Resource.MANA))));
+                (player) -> PowerHelper.trade.accept(player, Resource.create(1, Resource.STRENGTH), Resource.create(3, Resource.MANA))));
         powers.put("miner", Power.createForCitizen("miner", true,
                 (player) -> {
                     final int qty = player.domains.size();
-                    Moves.collect.accept(player, Item.create(1 + qty, Resource.GOLD));
+                    PowerHelper.collect.accept(player, Resource.create(1 + qty, Resource.GOLD));
                 },
-                (player) -> Moves.collect.accept(player, Item.create(4, Resource.GOLD))));
+                (player) -> PowerHelper.collect.accept(player, Resource.create(4, Resource.GOLD))));
         powers.put("butcher", Power.createForCitizen("butcher", true,
                 (player) -> {
-                    final int qty = (int) player.citizens.stream().filter(c -> Objects.equals(c.role, Role.CRAFTMAN)).count();
-                    Moves.collect.accept(player, Item.create(2 * qty, Resource.GOLD));
+                    final int qty = ListHelper.<Citizen>count(player.citizens, c -> c.role == Role.CRAFTMAN);
+                    PowerHelper.collect.accept(player, Resource.create(2 * qty, Resource.GOLD));
                 },
-                (player) -> Moves.collect.accept(player, Item.create(4, Resource.GOLD))));
+                (player) -> PowerHelper.collect.accept(player, Resource.create(4, Resource.GOLD))));
     }
 
     /* Define DOMAIN powers */
     static {
         powers.put("shadows_dock", Power.createForDomain("shadows_dock", true,
-                (player) -> Moves.stealRandomMonsters.accept(player, 1),
+                (player) -> PowerHelper.stealRandomMonsters.accept(player, 1),
                 Trigger.NOW));
+        powers.put("lamentations_source", Power.createForDomain("lamentations_source", true,
+                (player) -> {},
+                Trigger.AFTER_RECRUIT));
+        powers.put("craftmen_village", Power.createForDomain("craftmen_village", true,
+                (player) -> {},
+                Trigger.NOW));
+        powers.put("darks_harbor", Power.createForDomain("darks_harbor", true,
+                (player) -> {},
+                Trigger.NOW));
+        powers.put("blackwidow_den", Power.createForDomain("blackwidow_den", true,
+                (player) -> {},
+                Trigger.NOW));
+        powers.put("graylake_dungeon", Power.createForDomain("graylake_dungeon", true,
+                (player) -> {},
+                Trigger.NOW));
+        powers.put("coupe_gorge", Power.createForDomain("coupe_gorge", true,
+                (player) -> {},
+                Trigger.NOW));
+        powers.put("urdr_orb", Power.createForDomain("urdr_orb", true,
+                (player) -> {},
+                Trigger.NOW));
+        powers.put("asteraton_eye", Power.createForDomain("asteraton_eye", true,
+                (player) -> {},
+                Trigger.NOW));
+        powers.put("dawn_citadel", Power.createForDomain("dawn_citadel", true,
+                (player) -> {},
+                Trigger.NOW));
+        powers.put("st_aquilin_cathedral", Power.createForDomain("st_aquilin_cathedral", true,
+                (player) -> {},
+                Trigger.NOW));
+        powers.put("lakeside_lookout", Power.createForDomain("lakeside_lookout", true,
+                (player) -> {},
+                Trigger.NOW));
+        powers.put("scarlet_battalion", Power.createForDomain("scarlet_battalion", true,
+                (player) -> {},
+                Trigger.NOW));
+        powers.put("purple_thorn", Power.createForDomain("purple_thorn", true,
+                (player) -> {},
+                Trigger.NOW));
+        powers.put("peak_camp", Power.createForDomain("peak_camp", true,
+                (player) -> {},
+                Trigger.NOW));
+        powers.put("emerald_fortress", Power.createForDomain("emerald_fortress", true,
+                (player) -> {},
+                Trigger.NOW));
+        powers.put("nae_golden_obelisk", Power.createForDomain("nae_golden_obelisk", true,
+                (player) -> {},
+                Trigger.NOW));
+        powers.put("missous_hill", Power.createForDomain("missous_hill", true,
+                (player) -> {},
+                Trigger.NOW));
+        powers.put("ostendaar_monolith", Power.createForDomain("ostendaar_monolith", true,
+                (player) -> {},
+                Trigger.NOW));
+        powers.put("desert_orchid", Power.createForDomain("desert_orchid", true,
+                (player) -> {
+                    final int qty = ListHelper.<Citizen>count(player.citizens, c -> c.role == Role.SAINT);
+                    PowerHelper.changeDice.accept(Resource.create(qty, Resource.GOLD), 1);
+                },
+                Trigger.AFTER_TOSS));
+        powers.put("fox_grove", Power.createForDomain("fox_grove", true,
+                (player) -> PowerHelper.changeDice.accept(Resource.create(2, Resource.GOLD), 6),
+                Trigger.AFTER_TOSS));
+        powers.put("broken_hand", Power.createForDomain("broken_hand", true,
+                (player) -> PowerHelper.recruit.accept(player, Role.SAINT),
+                Trigger.NOW));
+        powers.put("pratchett_plateau", Power.createForDomain("pratchett_plateau", true,
+                (player) -> { /*TODO: complex, because we modify a domain and not a player*/ },
+                Trigger.BEFORE_BUILD));
+        powers.put("gargane_embrace", Power.createForDomain("gargane_embrace", true,
+                (player) -> {
+                    if (Objects.equals(Turn.current.firstMove.toss.dice1, Turn.current.firstMove.toss.dice2)) {
+                        PowerHelper.collect.accept(player,Resource.create(1, Resource.VP));
+                    }
+                },
+                Trigger.AFTER_TOSS));
     }
 
     /* Define MONSTER powers */
     static {
         powers.put("awful_bear", Power.createForMonster("awful_bear", true,
-                (player) -> Moves.collect.accept(player, Item.create(3, Resource.MANA))));
+                (player) -> PowerHelper.collect.accept(player, Resource.create(3, Resource.MANA))));
     }
 
     /* Define DUKE powers */
     static {
         powers.put("waryn", Power.createForDuke("waryn", true,
-                (player) -> Moves.collect.accept(player, Item.create(3, Resource.MANA))));
+                (player) -> PowerHelper.collect.accept(player, Resource.create(3, Resource.MANA))));
     }
 
     public final Type type;
