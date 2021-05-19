@@ -9,7 +9,7 @@ import java.util.function.Consumer;
 
 public class Power {
 
-    private static final Consumer<Player> NO_POWER = (p) -> {};
+    private static final Consumer<Player> NO_POWER = p -> {};
     private static final Trigger NO_TRIGGER = null;
 
     public static final Map<String, Power> powers = new HashMap<>();
@@ -126,7 +126,7 @@ public class Power {
     /* Define DOMAIN powers */
     static {
         powers.put("shadows_dock", Power.createForDomain("shadows_dock", true,
-                (player) -> Moves.collect.accept(player, Item.create(3, Resource.MANA)),
+                (player) -> Moves.stealRandomMonsters.accept(player, 1),
                 Trigger.NOW));
     }
 

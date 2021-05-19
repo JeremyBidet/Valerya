@@ -1,11 +1,17 @@
 package org.valerya.core;
 
+import org.valerya.data.Citizen;
+import org.valerya.data.Domain;
+import org.valerya.data.Monster;
+import org.valerya.data.Type;
 import org.valerya.utils.StringHelper;
 import org.valerya.utils.TriConsumer;
 
-import java.util.Scanner;
+import java.util.*;
 import java.util.function.BiConsumer;
 import java.util.function.BiFunction;
+import java.util.function.Function;
+import java.util.stream.IntStream;
 
 public class Moves {
 
@@ -92,5 +98,88 @@ public class Moves {
         target.add(item.resource, -quantity);
         player.add(item.resource, quantity);
     };
-
+    
+    /**
+     * Steal randomly a given amount of domains from player(s).<br>
+     * <br>
+     * <b><code>player</code></b> the player to feed<br>
+     * <b><code>quantity</code></b> the number of domains to steal<br>
+     */
+    public static final BiConsumer<Player, Integer> stealRandomCitizens = (player, quantity) -> Moves.<Citizen>stealRandomCards(player, quantity, Type.CITIZEN);
+    
+    /**
+     * Steal randomly a given amount of domains from player(s).<br>
+     * <br>
+     * <b><code>player</code></b> the player to feed<br>
+     * <b><code>quantity</code></b> the number of domains to steal<br>
+     */
+    public static final BiConsumer<Player, Integer> stealRandomMonsters = (player, quantity) -> Moves.<Monster>stealRandomCards(player, quantity, Type.MONSTER);
+    
+    /**
+     * Steal randomly a given amount of domains from player(s).<br>
+     * <br>
+     * <b><code>player</code></b> the player to feed<br>
+     * <b><code>quantity</code></b> the number of domains to steal<br>
+     */
+    public static final BiConsumer<Player, Integer> stealRandomDomains = (player, quantity) -> Moves.<Domain>stealRandomCards(player, quantity, Type.DOMAIN);
+    
+    private static <T> void stealRandomCards(Player player, int quantity, Type type) {
+        final Function<Player, List<T>> getter;
+        if (type == Type.CITIZEN) {
+            getter = p -> (List<T>) p.citizens;
+        } else if(type == Type.MONSTER) {
+            getter = p -> (List<T>) p.monsters;
+        } else if(type == Type.DOMAIN) {
+            getter = p -> (List<T>) p.domains;
+        } else {
+            return;
+        }
+        
+        String choice = "";
+        int choiceQty = 0;
+        final Map<String, Integer> choices = new HashMap<>(quantity);
+    
+        System.out.println("Steal randomly " + quantity + " " + type.name().toLowerCase() + (quantity > 1 ? "s" : "") + " from ? (enter name->quantity)");
+        String players = Player.players.values().stream()
+                .map(p -> "\t- " + p.name + " (" + getter.apply(p).size() + ")\n"
+                        + getter.apply(p).stream()
+                        .map(m -> "\t\t- " + m.toString())
+                        .reduce(StringHelper::joinLN)
+                        .orElse(""))
+                .reduce(StringHelper::joinLN)
+                .orElse("");
+        System.out.println(players);
+    
+        Scanner sc = new Scanner(System.in);
+        while (choiceQty != quantity) {
+            System.out.print(": ");
+            choice = sc.next();
+            final String[] choiceSplit = choice.split("->");
+            if (choiceSplit.length == 2) {
+                final String name = choiceSplit[0];
+                try {
+                    final int qty = Integer.parseInt(choiceSplit[1]);
+                    if (Player.players.containsKey(choice)) {
+                        choices.put(name, Math.min(qty, quantity - choiceQty));
+                        choiceQty = Math.min(quantity, qty + choiceQty);
+                    } else {
+                        System.out.println("Invalid player name! Please retry.");
+                    }
+                } catch (NumberFormatException e) {
+                    System.out.println("Invalid quantity! Please retry.");
+                }
+            }
+        }
+        sc.close();
+    
+        choices.entrySet().stream().forEach(e -> {
+            final Player target = Player.players.get(e.getKey());
+            IntStream.range(0, e.getValue()).forEach(i -> {
+                final T card = getter.apply(target).get(new Random().nextInt(getter.apply(target).size()));
+                getter.apply(target).remove(card);
+                getter.apply(player).add(card);
+            });
+        });
+    }
+    
 }
