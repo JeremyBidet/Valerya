@@ -211,9 +211,7 @@
 				"SHADOW",
 				"SHADOW"
 			],
-			"vp": 2,
-			"trigger": "NOW",
-			"power": "1MONSTER<-ANY_PLAYER"
+			"vp": 2
 		},
 		{
 			"type": "DOMAIN",
@@ -223,9 +221,7 @@
 				"CRAFTMAN",
 				"SHADOW"
 			],
-			"vp": 3,
-			"trigger": "RECRUIT",
-			"power": "1MANA"
+			"vp": 3
 		},
 		{
 			"type": "DOMAIN",
@@ -445,9 +441,7 @@
 				"SAINT",
 				"SHADOW"
 			],
-			"vp": 3,
-			"trigger": "AFTER:TOSS",
-			"power": "1GOLD*CITIZEN&SAINT->DICE=1"
+			"vp": 3
 		},
 		{
 			"type": "DOMAIN",
@@ -457,9 +451,7 @@
 				"SOLDIER",
 				"SHADOW"
 			],
-			"vp": 3,
-			"trigger": "AFTER:TOSS",
-			"power": "2GOLD->DICE=6"
+			"vp": 3
 		},
 		{
 			"type": "DOMAIN",
@@ -469,9 +461,7 @@
 				"SAINT",
 				"CRAFTMAN"
 			],
-			"vp": 3,
-			"trigger": "NOW",
-			"power": "1CITIZEN&SAINT"
+			"vp": 3
 		},
 		{
 			"type": "DOMAIN",
@@ -493,9 +483,7 @@
 				"SOLDIER",
 				"SOLDIER"
 			],
-			"vp": 2,
-			"trigger": "AFTER:TOSS",
-			"power": "DICE=DICE->+1VP"
+			"vp": 2
 		}
 	],
 	"monsters": [

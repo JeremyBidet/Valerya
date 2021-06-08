@@ -27,12 +27,12 @@ public class Trigger {
     public static Trigger AFTER_HUNT = new Trigger(Hook.AFTER, Event.HUNT);
     public static Trigger AFTER_BUILD = new Trigger(Hook.AFTER, Event.BUILD);
 
-    public static Trigger ANY_TOSS = new Trigger(Hook.ANY, Event.TOSS);
-    public static Trigger ANY_HARVEST = new Trigger(Hook.ANY, Event.HARVEST);
-    public static Trigger ANY_ACTION = new Trigger(Hook.ANY, Event.ACTION);
-    public static Trigger ANY_RECRUIT = new Trigger(Hook.ANY, Event.RECRUIT);
-    public static Trigger ANY_HUNT = new Trigger(Hook.ANY, Event.HUNT);
-    public static Trigger ANY_BUILD = new Trigger(Hook.ANY, Event.BUILD);
+    public static Trigger TOSS = new Trigger(Hook.ANY, Event.TOSS);
+    public static Trigger HARVEST = new Trigger(Hook.ANY, Event.HARVEST);
+    public static Trigger ACTION = new Trigger(Hook.ANY, Event.ACTION);
+    public static Trigger RECRUIT = new Trigger(Hook.ANY, Event.RECRUIT);
+    public static Trigger HUNT = new Trigger(Hook.ANY, Event.HUNT);
+    public static Trigger BUILD = new Trigger(Hook.ANY, Event.BUILD);
 
     public enum Hook {
         NOW,

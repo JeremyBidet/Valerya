@@ -24,3 +24,6 @@ hs_err_pid*
 
 # out directory
 out/
+
+# .idea directory
+.idea/codestream.xml
